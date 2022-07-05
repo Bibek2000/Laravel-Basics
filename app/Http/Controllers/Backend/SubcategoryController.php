@@ -99,6 +99,7 @@ class SubcategoryController extends BackendBaseController
      */
     public function edit($id)
     {
+        $data['categories'] = Category::pluck('title','id');
         $data['record'] = $this->model->find($id);
         if(!$data['record' ]){
             request()->session()->flash('error',"Error:Invalid Request");
@@ -117,11 +118,12 @@ class SubcategoryController extends BackendBaseController
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'title'=>'required',
+            'slug'=>'required',
+            'rank'=>'required'
+        ]);
         try{
-            $request->validate([
-                'title'=>'required',
-                'slug'=>'required'
-            ]);
             $data['record']=$this->model->find($id);
             if(!$data['record' ]){
                 request()->session()->flash('error',"Error:Invalid Request");

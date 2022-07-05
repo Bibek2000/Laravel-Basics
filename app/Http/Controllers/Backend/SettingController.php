@@ -3,22 +3,23 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Backend\Category;
-use App\Models\Backend\Subcategory;
 use Illuminate\Http\Request;
-use App\Models\Backend\Product;
+use App\Models\Backend\Setting;
 
 
-
-class ProductController extends BackendBaseController
+class SettingController extends BackendBaseController
 {
-    protected $base_route = 'backend.product.';
-    protected $base_view = 'backend.product.';
-    protected $module = 'Product';
+    protected $base_route = 'backend.setting.';
+    protected $base_view = 'backend.setting.';
+    protected $module = 'Setting';
+
+
+
     public function __construct()
     {
-        $this->model = new Product();
+        $this->model= new Setting();
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,8 +28,10 @@ class ProductController extends BackendBaseController
     public function index()
     {
 
-        $data['records'] = $this->model->all();
-        return view($this->__loadDataTOView($this->base_view.'index'), compact('data'));
+        $data['records'] = $this->model::all();
+        return view($this->__loadDataToView($this->base_view.'index'), compact('data'));
+
+
     }
 
     /**
@@ -38,10 +41,7 @@ class ProductController extends BackendBaseController
      */
     public function create()
     {
-//        $data['categories'] = Category::all();
-        $data['categories'] = Category::pluck('title','id');
-        $data['subcategories'] = Subcategory::pluck('title','id');
-        return view($this->__loadDataToView($this->base_view.'create'),compact('data'));
+        return view($this->__loadDataToView($this->base_view .'create'));
     }
 
     /**
@@ -58,12 +58,12 @@ class ProductController extends BackendBaseController
                 'slug'=>'required'
             ]);
             $request->request->add(['created_by'=>auth()->user()->id]);
-            $record=$this->model->create($request->all());
+            $record=$this->model::create($request->all());
             if($record)
             {
-                request()->session()->flash('success',$this->module."Created");
+                request()->session()->flash('success',($this->__loadDataToView($this->module))."Created");
             }else{
-                request()->session()->flash('error',$this->module."Creation Failed ");
+                request()->session()->flash('error',($this->__loadDataToView($this->module))."Creation Failed ");
 
             }
         }
@@ -72,7 +72,7 @@ class ProductController extends BackendBaseController
 
         }
 
-        return redirect()->route($this->base_route.'index');
+        return redirect()->route($this->__loadDataToView($this->base_route.'index'));
     }
 
 
@@ -84,7 +84,7 @@ class ProductController extends BackendBaseController
      */
     public function show($id)
     {
-        $data['record'] = $this->model->find($id);
+        $data['record'] = $this->model::find($id);
         if(!$data['record' ]){
             request()->session()->flash('error',"Error:Invalid Request");
             return redirect()->route($this->__loadDataToView($this->base_route.'index'));
@@ -101,8 +101,7 @@ class ProductController extends BackendBaseController
      */
     public function edit($id)
     {
-        $data['categories'] = Category::pluck('title','id');
-        $data['record'] = $this->model->find($id);
+        $data['record'] = $this->model::find($id);
         if(!$data['record' ]){
             request()->session()->flash('error',"Error:Invalid Request");
             return redirect()->route($this->__loadDataToView($this->base_route.'index'));
@@ -120,13 +119,12 @@ class ProductController extends BackendBaseController
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'title'=>'required',
-            'slug'=>'required',
-            'rank'=>'required'
-        ]);
         try{
-            $data['record']=$this->model->find($id);
+            $request->validate([
+                'title'=>'required',
+                'slug'=>'required'
+            ]);
+            $data['record']=$this->model::find($id);
             if(!$data['record' ]){
                 request()->session()->flash('error',"Error:Invalid Request");
                 return redirect()->route($this->__loadDataToView($this->base_route.'index'));
@@ -136,9 +134,9 @@ class ProductController extends BackendBaseController
             $record=$data['record']->update($request->all());
             if($record)
             {
-                request()->session()->flash('sucess',$this->module ."Updated");
+                request()->session()->flash('success',($this->__loadDataToView($this->module))."Updated");
             }else{
-                request()->session()->flash('error',$this->module ."Updation  Failed ");
+                request()->session()->flash('error',($this->__loadDataToView($this->module))."Updation Failed ");
 
             }
         }
@@ -159,10 +157,11 @@ class ProductController extends BackendBaseController
      */
     public function destroy($id)
     {
-        $data['record']=$this->model->find($id);
+        $data['record']=$this->model::find($id);
         if(!$data['record' ]){
             request()->session()->flash('error',"Error:Invalid Request");
             return redirect()->route($this->__loadDataToView($this->base_route.'index'));
+
         }
         if($data["record"]->delete())
         {
@@ -176,17 +175,19 @@ class ProductController extends BackendBaseController
     }
     public function trash()
     {
-        $data['records'] = $this->model->onlyTrashed()->get();
+        $data['records'] = $this->model::onlyTrashed()->get();
         return view($this->__loadDataToView($this->base_view.'trash'), compact('data'));
+
+
     }
     public function restore(Request $request, $id)
     {
         try{
-            $data['record']=$this->model->onlyTrashed()->where('id',$id)->first();
+            $data['record']=$this->model::onlyTrashed()->where('id',$id)->first();
             if(!$data['record'])
             {
                 request()->session()->flash('error',"Error:Invalid Request");
-                return redirect()->route($this->__loadDataToView($this->base_route.'index'));
+                return redirect()->route($this->__loadDataToView($this->base_route."index"));
             }
             if($data['record'])
             {
@@ -205,14 +206,14 @@ class ProductController extends BackendBaseController
             request()->session()->flash('error',"Error:".$exception->getMessage());
 
         }
-        return redirect()->route($this->__loadDataToView($this->base_route.'index'));
+        return redirect()->route($this->__loadDataToView($this->base_route."index"));
 
 
     }
     public function permanentDelete($id)
     {
-        $data['record']=$this->model->onlyTrashed()->where('id',$id)->first();
-        if(!$data['record']){
+        $data['record']=$this->model::onlyTrashed()->where('id',$id)->first();
+        if(!$data['record' ]){
             request()->session()->flash('error',"Error:Invalid Request");
             return redirect()->route($this->__loadDataToView($this->base_route.'index'));
 

@@ -113,3 +113,21 @@ Route::prefix('backend/product')->name('backend.product.')->controller(\App\Http
     //route to update data
     Route:: put('/{id}','update')->name('update');
 });
+
+
+Route::prefix('backend/setting')->name('backend.setting.')->controller(\App\Http\Controllers\Backend\SettingController::class)->group (function(){
+    Route:: get('/trash','trash')->name('trash');
+    Route:: post('/restore/{id}','restore')->name('restore');
+    Route:: delete ('/force_delete/{id}','permanentDelete')->name('force_delete');
+
+
+    Route::get('/create','create')->name('create');
+    Route:: post('','store')->name('store');
+    Route::get('','index')->name('index');
+    Route:: get('/{id}','show')->name('show');
+    Route:: delete('/{id}','destroy')->name('destroy');
+    //route to edit data
+    Route:: get('/{id}/edit','edit')->name('edit');
+    //route to update data
+    Route:: put('/{id}','update')->name('update');
+});

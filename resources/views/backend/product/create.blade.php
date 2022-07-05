@@ -1,21 +1,6 @@
  @extends('layouts.backend') @section('title','Product') @section('content')
 <!-- Content Header (Page header) -->
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>Product Management</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Product</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-    <!-- /.container-fluid -->
-</section>
+@include('backend.includes.breadcrumb')
 
 <!-- Main content -->
 <section class="content">
@@ -34,60 +19,67 @@
                     </button>
             </div>
         </div>
-        <form action="{{route('backend.product.store')}}" method="post">
-            @csrf
+        {!!Form::open(['route' => [$base_route.'store'],'method'=>'post'])!!}
             <div class="card-body">
-                <div class="form-group">
-                    <label for="title">Category</label>
-                    <select class="form-control" id="category" name="title">
-                        @foreach($data['categories'] as $record)
-                        <option>{{$record->title}}</option>
-                        @endforeach
-                        
-                    </select>
+                <div class="card">
+                    <div class="card-header d-flex p-0">
+                        <h3 class="card-title p-3">Product Details</h3>
+                        <ul class="nav nav-pills ml-auto p-2">
+                            <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Basic Info</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Meta Info</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">Image</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#tab_4" data-toggle="tab">Attribute</a></li>
+{{--                            <li class="nav-item dropdown">--}}
+{{--                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">--}}
+{{--                                    Dropdown <span class="caret"></span>--}}
+{{--                                </a>--}}
+{{--                                <div class="dropdown-menu">--}}
+{{--                                    <a class="dropdown-item" tabindex="-1" href="#">Action</a>--}}
+{{--                                    <a class="dropdown-item" tabindex="-1" href="#">Another action</a>--}}
+{{--                                    <a class="dropdown-item" tabindex="-1" href="#">Something else here</a>--}}
+{{--                                    <div class="dropdown-divider"></div>--}}
+{{--                                    <a class="dropdown-item" tabindex="-1" href="#">Separated link</a>--}}
+{{--                                </div>--}}
+{{--                            </li>--}}
+                        </ul>
+                    </div><!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_1">
+                                @include($base_view.'includes.basic_info',['button'=>'Save'])
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="tab-pane" id="tab_2">
+                                @include($base_view.'includes.meta')
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="tab-pane" id="tab_3">
+                                @include($base_view.'includes.image')
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="tab-pane" id="tab_4">
+                                @include($base_view.'includes.attribute')
+                            </div>
+                        </div>
+                        <!-- /.tab-content -->
+                    </div><!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-success">Save Product</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" class="form-control" id="title" placeholder="Enter Title">
-                </div>
-                <div class="form-group">
-                    <label for="status">Slug</label>
-                    <input type="text" name="slug" class="form-control" id="slug" placeholder="Slug">
-                </div>
-                <div class="form-group">
-                    <label for="rank">Rank</label>
-                    <input type="number" name="rank" class="form-control" id="rank" placeholder="Rank">
-                </div>
-                <div class="form-group">
-                    <label for="Image">Image</label></br>
-                    <input type="file" name="image" class="" id="image">
-                </div>
-                <div class="form-group">
-                    <label for="meta_title">Meta Title</label>
-                    <input type="text" name="meta_title" class="form-control" id="meta_title" placeholder="Meta Title">
-                </div>
-                <div class="form-group">
-                    <label for="meta_keyword">Meta Keyword</label>
-                    <input type="text" name="meta_keyword" class="form-control" id="meta_keyword" placeholder="Meta Keyword">
-                </div>
-                <div class="form-group">
-                    <label for="meta_description">Meta Description</label><br>
-                    <textarea name="meta_description" cols="40" rows="5" placeholder="Meta Description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="status">Status</label><br>
-                    <input type="radio" name="status" value="1"> Enable<br>
-                    <input type="radio" name="status" value="2"> Disable<br>
-                </div>
-
-                <input type="hidden" value="{{auth()->user()->id}}" name="created_by">
-
-
+                <!-- ./card -->
             </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
+{{--                <div class="form-group">--}}
+{{--                    <label for="title">Product</label>--}}
+{{--                    <select class="form-control" id="product" name="title">--}}
+{{--                        @foreach($data['products'] as $record)--}}
+{{--                        <option>{{$record->title}}</option>--}}
+{{--                        @endforeach--}}
+
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--                <input type="hidden" value="{{auth()->user()->id}}" name="created_by">--}}
+        {{Form::close()}}
 
         <!-- /.card-body -->
         <div class="card-footer">

@@ -37,47 +37,10 @@
                     </button>
                 </div>
             </div>
-            <form action="{{route($base_route . 'update',$data['record']->id)}}" method="post">
-                <input type="hidden" name="_method" value="PUT">
-                @csrf
-                <div class="card-body">
-
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" name="title" class="form-control" id="title" value="{{$data['record']->title}}" placeholder="Enter Title">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="status">Slug</label>
-                        <input type="text" name="slug" class="form-control" id="slug" value="{{$data['record']->slug}}" placeholder="Status">
-                    </div>
-                    <div class="form-group">
-                        <label for="rank">Rank</label>
-                        <input type="number" name="rank" class="form-control" id="rank" value="{{$data['record']->rank}}" placeholder="Rank">
-                    </div>
-                    <div class="form-group">
-                        <label for="active">Status</label><br>
-                        @if($data['record']->status==1)
-                            <input type="radio" name="status" id="active" value="1" checked> Enable<br>
-                            <input type="radio" name="status" d="active" value="0"> Disable<br>
-                        @else
-                            <input type="radio" name="status" id="active" value="1"> Enable<br>
-                            <input type="radio" name="status" d="active" value="0" checked> Disable<br>
-                        @endif
-                    </div>
-                    <input type="hidden" value="{{auth()->user()->id}}" name="updated_by">
-
-
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-            </form>
-
-            <!-- /.card-body -->
-            <div class="card-footer">
-                Footer
-            </div>
+            <div class="card-body">
+                {!!Form::model($data['record'], ['route' => [$base_route.'store'],'method'=>'post'])!!}
+                @include($base_view .'main_form',['button'=>'Update '])
+            {{Form::close()}}
             <!-- /.card-footer-->
         </div>
         <!-- /.card -->

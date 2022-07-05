@@ -209,7 +209,7 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
-                                Products
+                                Product
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -222,6 +222,30 @@
                             </li>
                             <li class="nav-item">
                                 <a href="{{url('/backend/product')}}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>List</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Settings
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{url('/backend/setting/create')}}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Create</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{url('/backend/setting')}}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>List</p>
                                 </a>
